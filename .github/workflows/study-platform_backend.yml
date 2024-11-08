@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{matrix.os}}
     strategy: 
       matrix:
-        os: [ubuntu-latest, ubuntu-22.04, ubuntu-20.04, macos-latest, macos-13]
+        os: [ubuntu-latest, ubuntu-22.04, ubuntu-20.04, macos-13]
         
     services:
       postgres:
@@ -25,11 +25,11 @@ jobs:
           
         ports: 
           - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        # options: >-
+        #   --health-cmd "pg_isready -U postgres"
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
     env: 
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/study_platform_db 
       FLASK_APP: app
@@ -38,24 +38,24 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
         
-      - name: Set up Docker for Linux
-        if: runner.os == 'ubuntu'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl start docker
-          sudo systemctl enable docker
+      # - name: Set up Docker for Linux
+      #   if: runner.os == 'ubuntu'
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y docker.io
+      #     sudo systemctl start docker
+      #     sudo systemctl enable docker
           
-      - name: Install Docker on macOS
-        if: runner.os == 'macos'
-        run: |
-          brew install --cask docker
-          open -g -a Docker
-          # Wait for Docker to start up (optional)
-          while ! docker info > /dev/null 2>&1; do
-            echo "Waiting for Docker to start..."
-            sleep 5
-          done
+      # - name: Install Docker on macOS
+      #   if: runner.os == 'macos'
+      #   run: |
+      #     brew install --cask docker
+      #     open -g -a Docker
+      #     # Wait for Docker to start up (optional)
+      #     while ! docker info > /dev/null 2>&1; do
+      #       echo "Waiting for Docker to start..."
+      #       sleep 5
+      #     done
           
       - name:  setup python
         uses: actions/setup-python@v3
