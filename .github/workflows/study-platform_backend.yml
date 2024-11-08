@@ -9,7 +9,30 @@ on:
       - development
       
 jobs:
-  build: 
+  build-macos:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [macos-latest, macos-13, macos-12]
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        
+      - name:  setup python
+        uses: actions/setup-python@v3
+        with: 
+          python-version: '3.12.x'
+
+      - name: upgrade pip
+        run: 
+          python -m pip install --upgrade pip
+          
+      - name: install dependencies
+        run:
+          pip install -r requirements.txt 
+          
+  build-linux:
     runs-on: ${{matrix.os}}
     strategy: 
       matrix:
@@ -26,11 +49,11 @@ jobs:
           
         ports: 
           - 5432:5432
-        # options: >-
-        #   --health-cmd "pg_isready -U postgres"
-        #   --health-interval 10s
-        #   --health-timeout 5s
-        #   --health-retries 5
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env: 
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/study_platform_db 
       FLASK_APP: app
@@ -39,25 +62,6 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v3
         
-      # - name: Set up Docker for Linux
-      #   if: runner.os == 'ubuntu'
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y docker.io
-      #     sudo systemctl start docker
-      #     sudo systemctl enable docker
-          
-      # - name: Install Docker on macOS
-      #   if: runner.os == 'macos'
-      #   run: |
-      #     brew install --cask docker
-      #     open -g -a Docker
-      #     # Wait for Docker to start up (optional)
-      #     while ! docker info > /dev/null 2>&1; do
-      #       echo "Waiting for Docker to start..."
-      #       sleep 5
-      #     done
-          
       - name:  setup python
         uses: actions/setup-python@v3
         with: 
@@ -67,7 +71,7 @@ jobs:
         run: 
           python -m pip install --upgrade pip
           
-      - name: install dependecies
+      - name: install dependencies
         run:
           pip install -r requirements.txt
           
