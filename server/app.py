@@ -1,7 +1,7 @@
 from flask import jsonify, make_response
 from flask_restful import Resource
 from config import app, api
-from models import Users
+from models import User
 
 class HomeResource(Resource):
     def get(self):
