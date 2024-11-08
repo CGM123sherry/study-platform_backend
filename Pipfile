@@ -17,6 +17,7 @@ sqlalchemy-serializer = "*"
 flask-migrate = "*"
 alembic = "*"
 python-dotenv = "*"
+docker = "*"
 
 [dev-packages]
 
